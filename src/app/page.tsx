@@ -61,8 +61,8 @@ export default function Home() {
         </Link>
         <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-widest text-muted-foreground">
           <Link href="#arenas" className="hover:text-primary transition-colors">Arenas</Link>
-          <Link href="#" className="hover:text-primary transition-colors">Leaderboard</Link>
-          <Link href="#" className="hover:text-primary transition-colors">Hall of Fame</Link>
+          <Link href="/leaderboard" className="hover:text-primary transition-colors">Leaderboard</Link>
+          <Link href="/hall-of-fame" className="hover:text-primary transition-colors">Hall of Fame</Link>
         </div>
         <div className="flex items-center gap-4">
           <BattleButton variant="outline" size="sm" className="hidden sm:flex">CONNECT WALLET</BattleButton>
