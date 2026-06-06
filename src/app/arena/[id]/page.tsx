@@ -1,13 +1,15 @@
 import Image from "next/image"
 import { ArenaBattle } from "@/components/arena/ArenaBattle"
 import { BattleButton } from "@/components/ui/battle-button"
-import { Timer, Users, Trophy, ChevronLeft, Share2, Info } from "lucide-react"
+import { Timer, Users, Trophy, ChevronLeft, Share2, Info, Zap } from "lucide-react"
 import Link from "next/link"
 
-export default function ArenaDetailPage({ params }: { params: { id: string } }) {
+export default async function ArenaDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+
   // Mock data for the specific arena
   const arenaData = {
-    id: params.id,
+    id: id,
     bossName: "Nischal Shetty",
     bossAvatar: "https://picsum.photos/seed/boss1/400/400",
     projectName: "WazirX / Shardeum",

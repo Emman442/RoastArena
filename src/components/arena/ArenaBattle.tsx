@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Trophy, Flame, Zap, Sword, Shield, Eye, Cpu, Loader2 } from "lucide-react"
+import { Trophy, Flame, Zap, Sword, Shield, Cpu, Loader2, Coins } from "lucide-react"
 import { aiRoastEvaluation, type AiRoastEvaluationOutput } from "@/ai/flows/ai-roast-evaluation"
 import { liveRoastScorePreview, type LiveRoastScorePreviewOutput } from "@/ai/flows/live-roast-score-preview"
 
@@ -292,5 +292,3 @@ export function ArenaBattle({ challengeId, bossName, challengePrompt, prizePool 
     </div>
   )
 }
-
-import { Coins } from "lucide-react"
