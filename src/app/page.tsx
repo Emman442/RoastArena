@@ -4,6 +4,8 @@ import Link from "next/link"
 import { BattleButton } from "@/components/ui/battle-button"
 import { ArenaCard } from "@/components/arena/ArenaCard"
 import { Trophy, Target, Users, Zap, Coins } from "lucide-react"
+import { useWallets } from "@privy-io/react-auth"
+import Navbar from "@/components/ui/navbar"
 
 export default function Home() {
   const stats = [
@@ -55,23 +57,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
-      <nav className="fixed top-0 w-full z-50 glass border-b border-white/10 px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-sm flex items-center justify-center font-black italic text-xl -rotate-12 shadow-[0_0_15px_rgba(188,19,254,0.5)]">R</div>
-          <span className="font-headline font-black text-2xl tracking-tighter uppercase italic">Roast<span className="text-primary">Arena</span></span>
-        </Link>
-        <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-widest text-muted-foreground">
-          <Link href="#arenas" className="hover:text-primary transition-colors">Arenas</Link>
-          <Link href="/leaderboard" className="hover:text-primary transition-colors">Leaderboard</Link>
-          <Link href="/hall-of-fame" className="hover:text-primary transition-colors">Hall of Fame</Link>
-        </div>
-        <div className="flex items-center gap-4">
-          <BattleButton variant="outline" size="sm" className="hidden sm:flex">CONNECT WALLET</BattleButton>
-          <Link href="#arenas">
-            <BattleButton variant="primary" size="sm">ENTER ARENA</BattleButton>
-          </Link>
-        </div>
-      </nav>
+      <Navbar/>
 
       {/* Hero Section */}
       <section className="relative pt-40 pb-20 px-6 overflow-hidden">
