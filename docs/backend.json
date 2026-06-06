@@ -1,0 +1,64 @@
+
+{
+  "entities": {
+    "Challenge": {
+      "title": "Challenge",
+      "description": "A roast challenge created by a founder.",
+      "type": "object",
+      "properties": {
+        "bossName": {
+          "type": "string",
+          "description": "Name of the founder/boss."
+        },
+        "bossAvatar": {
+          "type": "string",
+          "description": "URL to the boss avatar image."
+        },
+        "projectName": {
+          "type": "string",
+          "description": "Name of the project being roasted."
+        },
+        "projectLogo": {
+          "type": "string",
+          "description": "URL to the project logo."
+        },
+        "prompt": {
+          "type": "string",
+          "description": "The specific roast prompt."
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed background for the challenge."
+        },
+        "prizePool": {
+          "type": "number",
+          "description": "Total USDC prize pool."
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["Beginner", "Elite", "Savage"],
+          "description": "Difficulty level of the challenge."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of creation."
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "User ID of the creator."
+        }
+      },
+      "required": ["bossName", "projectName", "prompt", "prizePool", "difficulty"]
+    }
+  },
+  "auth": {
+    "providers": ["google.com"]
+  },
+  "firestore": {
+    "/challenges/{challengeId}": {
+      "schema": "Challenge",
+      "description": "Collection of all roast challenges."
+    }
+  }
+}

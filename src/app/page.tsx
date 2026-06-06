@@ -1,3 +1,4 @@
+
 import Image from "next/image"
 import Link from "next/link"
 import { BattleButton } from "@/components/ui/battle-button"
@@ -98,9 +99,11 @@ export default function Home() {
                 ENTER ARENA
               </BattleButton>
             </Link>
-            <BattleButton variant="outline" size="lg" className="w-full sm:w-auto text-xl italic border-secondary text-secondary hover:bg-secondary/10 hover:border-secondary">
-              CREATE CHALLENGE
-            </BattleButton>
+            <Link href="/create-challenge" className="w-full sm:w-auto">
+              <BattleButton variant="outline" size="lg" className="w-full text-xl italic border-secondary text-secondary hover:bg-secondary/10 hover:border-secondary">
+                CREATE CHALLENGE
+              </BattleButton>
+            </Link>
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-16">
