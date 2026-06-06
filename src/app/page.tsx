@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 import { BattleButton } from "@/components/ui/battle-button"
 import { ArenaCard } from "@/components/arena/ArenaCard"
 import { Trophy, Target, Users, Zap, Coins } from "lucide-react"
@@ -54,18 +55,20 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       {/* Header */}
       <nav className="fixed top-0 w-full z-50 glass border-b border-white/10 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <div className="w-8 h-8 bg-primary rounded-sm flex items-center justify-center font-black italic text-xl -rotate-12 shadow-[0_0_15px_rgba(188,19,254,0.5)]">R</div>
           <span className="font-headline font-black text-2xl tracking-tighter uppercase italic">Roast<span className="text-primary">Arena</span></span>
-        </div>
+        </Link>
         <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-widest text-muted-foreground">
-          <a href="#" className="hover:text-primary transition-colors">Arenas</a>
-          <a href="#" className="hover:text-primary transition-colors">Leaderboard</a>
-          <a href="#" className="hover:text-primary transition-colors">Hall of Fame</a>
+          <Link href="#arenas" className="hover:text-primary transition-colors">Arenas</Link>
+          <Link href="#" className="hover:text-primary transition-colors">Leaderboard</Link>
+          <Link href="#" className="hover:text-primary transition-colors">Hall of Fame</Link>
         </div>
         <div className="flex items-center gap-4">
           <BattleButton variant="outline" size="sm" className="hidden sm:flex">CONNECT WALLET</BattleButton>
-          <BattleButton variant="primary" size="sm">ENTER ARENA</BattleButton>
+          <Link href="#arenas">
+            <BattleButton variant="primary" size="sm">ENTER ARENA</BattleButton>
+          </Link>
         </div>
       </nav>
 
@@ -90,9 +93,11 @@ export default function Home() {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4">
-            <BattleButton variant="primary" size="lg" className="w-full sm:w-auto text-xl italic" glowing>
-              ENTER ARENA
-            </BattleButton>
+            <Link href="#arenas" className="w-full sm:w-auto">
+              <BattleButton variant="primary" size="lg" className="w-full text-xl italic" glowing>
+                ENTER ARENA
+              </BattleButton>
+            </Link>
             <BattleButton variant="outline" size="lg" className="w-full sm:w-auto text-xl italic border-secondary text-secondary hover:bg-secondary/10 hover:border-secondary">
               CREATE CHALLENGE
             </BattleButton>
@@ -113,7 +118,7 @@ export default function Home() {
       </section>
 
       {/* Active Arenas */}
-      <section className="py-20 px-6 max-w-7xl mx-auto w-full space-y-12">
+      <section id="arenas" className="py-20 px-6 max-w-7xl mx-auto w-full space-y-12 scroll-mt-24">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-l-4 border-primary pl-6">
           <div className="space-y-2">
             <h2 className="text-4xl font-black uppercase tracking-tighter italic">Active <span className="text-primary">Arenas</span></h2>
@@ -132,9 +137,11 @@ export default function Home() {
         </div>
 
         <div className="flex justify-center pt-8">
-          <BattleButton variant="outline" className="w-full max-w-md uppercase tracking-[0.3em] text-xs py-8">
-            View All Current Battles
-          </BattleButton>
+          <Link href="#arenas" className="w-full max-w-md">
+            <BattleButton variant="outline" className="w-full uppercase tracking-[0.3em] text-xs py-8">
+              View All Current Battles
+            </BattleButton>
+          </Link>
         </div>
       </section>
 
