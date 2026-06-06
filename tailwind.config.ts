@@ -11,7 +11,7 @@ export default {
     extend: {
       fontFamily: {
         body: ['Inter', 'sans-serif'],
-        headline: ['Inter', 'sans-serif'],
+        headline: ['Space Grotesk', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
@@ -48,6 +48,14 @@ export default {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
+        gold: {
+          DEFAULT: '#FFD700',
+          glow: 'rgba(255, 215, 0, 0.4)',
+        },
+        battle: {
+          red: '#FF4500',
+          orange: '#FF8C00',
+        },
         chart: {
           '1': 'hsl(var(--chart-1))',
           '2': 'hsl(var(--chart-2))',
@@ -88,10 +96,20 @@ export default {
             height: '0',
           },
         },
+        'pulse-neon': {
+          '0%, 100%': { boxShadow: '0 0 5px var(--primary), 0 0 20px var(--primary)' },
+          '50%': { boxShadow: '0 0 10px var(--primary), 0 0 40px var(--primary)' },
+        },
+        'float': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'pulse-neon': 'pulse-neon 2s infinite ease-in-out',
+        'float': 'float 3s infinite ease-in-out',
       },
     },
   },
