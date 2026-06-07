@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ChevronLeft, Rocket, Coins, Target, ShieldCheck, Loader2 } from 'lucide-react';
+import { ChevronLeft, Rocket, Coins, Target, ShieldCheck, Loader2, Clock } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CreateChallengePage() {
@@ -22,7 +22,7 @@ export default function CreateChallengePage() {
     prompt: '',
     description: '',
     prizePool: '',
-    difficulty: 'Elite',
+    duration_seconds: 0,
   });
   console.log(formData)
 
@@ -31,10 +31,17 @@ export default function CreateChallengePage() {
 
     setIsSubmitting(true);
 
-
-
-
   };
+
+
+  const DURATIONS = {
+  "1h": 3600,
+  "6h": 21600,
+  "12h": 43200,
+  "24h": 86400,
+  "3d": 259200,
+  "7d": 604800,
+};
 
   return (
     <div className="min-h-screen flex flex-col pt-24 pb-20 px-6">
@@ -121,7 +128,28 @@ export default function CreateChallengePage() {
                   required
                 />
               </div>
+
+
+              <Select onValueChange={(value) => setFormData({ ...formData, duration_seconds: parseInt(value) })} defaultValue={formData.duration_seconds.toString()} className="bg-black/40 border-white/10">
+                <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1">
+                  <Clock className="w-3 h-3 text-blue-500" /> Challenge Duration
+                </Label>
+                <SelectContent>
+                  {Object.entries(DURATIONS).map(([label, value]) => (
+                    <SelectItem
+                      key={value}
+                      value={value.toString()}
+                      onSelect={() => setFormData({ ...formData, duration_seconds: value })}
+                    >
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
+
+
+
 
             <div className="pt-6">
               <BattleButton
