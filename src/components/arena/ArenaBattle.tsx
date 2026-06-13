@@ -7,43 +7,50 @@ import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Trophy, Flame, Zap, Sword, Shield, Cpu, Loader2, Coins } from "lucide-react"
-import { aiRoastEvaluation, type AiRoastEvaluationOutput } from "@/ai/flows/ai-roast-evaluation"
-import { liveRoastScorePreview, type LiveRoastScorePreviewOutput } from "@/ai/flows/live-roast-score-preview"
+import { useSubmitRoast } from "@/hooks/RoastArena"
+import toast from "@/lib/utils/toast"
 
 interface ArenaBattleProps {
   challengeId: string
   bossName: string
   challengePrompt: string
   prizePool: string
+  status: string
+  founderAddress: string
+  deadline: string
 }
 
-export function ArenaBattle({ challengeId, bossName, challengePrompt, prizePool }: ArenaBattleProps) {
+export function ArenaBattle({ challengeId, bossName, challengePrompt, prizePool, status, founderAddress, deadline }: ArenaBattleProps) {
+  console.log(status)
   const [roastText, setRoastText] = useState("")
   const [isEvaluating, setIsEvaluating] = useState(false)
-  const [evaluation, setEvaluation] = useState<AiRoastEvaluationOutput | null>(null)
-  const [preview, setPreview] = useState<LiveRoastScorePreviewOutput | null>(null)
+
   const [evalStep, setEvalStep] = useState(0)
+
+  const { mutate: submitRoast, isPending: isSubmitting } = useSubmitRoast()
+  const handleSubmit = () => {
+    try {
+      submitRoast({ challenge_id: challengeId, roast_content: roastText }, {
+        onSuccess: () => {
+          toast.success("Roast submitted successfully!", {
+            description: "Your roast has been submitted for evaluation. Good luck!",
+          })
+        },
+        onError: (error) => {
+          console.error("Error submitting roast:", error)
+          toast.error("Failed to submit roast. Please try again.")
+        }
+      })
+    } catch (error) {
+      console.error("Error submitting roast:", error)
+      toast.error("Failed to submit roast. Please try again.")
+    }
+  }
+
 
   // Character limit
   const MAX_CHARS = 280
 
-  // Live preview logic (debounced)
-  useEffect(() => {
-    const timer = setTimeout(async () => {
-      if (roastText.length > 20 && !isEvaluating) {
-        try {
-          const res = await liveRoastScorePreview({ roastText })
-          setPreview(res)
-        } catch (e) {
-          console.error("Preview failed", e)
-        }
-      } else if (roastText.length === 0) {
-        setPreview(null)
-      }
-    }, 1000)
-
-    return () => clearTimeout(timer)
-  }, [roastText, isEvaluating])
 
   const steps = [
     "Analyzing Comedic Timing...",
@@ -53,36 +60,17 @@ export function ArenaBattle({ challengeId, bossName, challengePrompt, prizePool 
     "Synthesizing AI Judgment..."
   ]
 
-  const handleSubmit = async () => {
-    if (!roastText || roastText.length < 10) return
 
-    setIsEvaluating(true)
-    setEvaluation(null)
-    setEvalStep(0)
+  const evaluation = {
+    humor: 85,
+    creativity: 78,
+    originality: 92,
+    savagery: 88,
+    relevance: 80,
+    viralityPotential: 90,
 
-    // Animation steps
-    const stepInterval = setInterval(() => {
-      setEvalStep(prev => {
-        if (prev < steps.length - 1) return prev + 1
-        return prev
-      })
-    }, 1200)
-
-    try {
-      const result = await aiRoastEvaluation({ roastText, challengePrompt })
-      
-      // Delay to finish animation
-      setTimeout(() => {
-        clearInterval(stepInterval)
-        setEvaluation(result)
-        setIsEvaluating(false)
-      }, 1500)
-    } catch (e) {
-      clearInterval(stepInterval)
-      setIsEvaluating(false)
-      console.error("Battle failed", e)
-    }
   }
+
 
   const ScoreBar = ({ label, score, color }: { label: string; score: number; color: string }) => (
     <div className="space-y-1">
@@ -90,7 +78,7 @@ export function ArenaBattle({ challengeId, bossName, challengePrompt, prizePool 
         <span>{label}</span>
         <span className={color}>{score}</span>
       </div>
-      <Progress value={score} className="h-1.5 bg-white/5" indicatorClassName={color} />
+      {/* <Progress value={score} className="h-1.5 bg-white/5" indicatorClassName={color} /> */}
     </div>
   )
 
@@ -144,25 +132,28 @@ export function ArenaBattle({ challengeId, bossName, challengePrompt, prizePool 
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-muted-foreground">
                   <Flame className="w-4 h-4 text-battle-orange" />
-                  Live Impact: <span className={preview ? "text-battle-orange" : ""}>{preview?.overallScore ?? 0}%</span>
+                  {/* Live Impact: <span className={preview ? "text-battle-orange" : ""}>{preview?.overallScore ?? 0}%</span> */}
                 </div>
               </div>
-              <BattleButton 
-                variant="primary" 
-                size="lg" 
+              <BattleButton
+                variant="primary"
+                size="lg"
                 className="font-black italic text-lg px-12 group"
                 onClick={handleSubmit}
-                disabled={isEvaluating || roastText.length < 10}
+                disabled={isSubmitting || roastText.length < 10}
               >
-                SUBMIT ENTRY
-                <Zap className="w-5 h-5 ml-2 fill-primary group-hover:animate-pulse" />
+                <div className="flex gap-2 justify-center items-center">
+
+                  {isSubmitting ? "Submitting..." : "SUBMIT ENTRY"}
+                  <Zap className="w-5 h-5 ml-2 fill-primary group-hover:animate-pulse" />
+                </div>
               </BattleButton>
             </div>
           </CardContent>
         </Card>
 
         {/* AI Result Dashboard */}
-        {evaluation && (
+        {status === "completed" && (
           <Card className="glass border-gold/30 gold-glow animate-in zoom-in duration-500">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
@@ -189,9 +180,9 @@ export function ArenaBattle({ challengeId, bossName, challengePrompt, prizePool 
                 <div className="flex items-center gap-2 text-gold text-xs font-black uppercase tracking-[0.2em]">
                   <Cpu className="w-4 h-4" /> Judge Reasoning
                 </div>
-                <p className="text-sm font-medium leading-relaxed italic opacity-90">
+                {/* <p className="text-sm font-medium leading-relaxed italic opacity-90">
                   "{evaluation.reasoning}"
-                </p>
+                </p> */}
               </div>
 
               <div className="flex items-center justify-between p-4 bg-primary/10 rounded-lg border border-primary/20">
@@ -230,7 +221,7 @@ export function ArenaBattle({ challengeId, bossName, challengePrompt, prizePool 
         </div>
 
         {/* Live Leaderboard */}
-        <Card className="glass border-white/10 h-fit">
+        {status === "completed" && <Card className="glass border-white/10 h-fit">
           <CardHeader className="pb-2">
             <h3 className="font-black uppercase tracking-tighter text-xl italic flex items-center justify-between">
               <span>Arena <span className="text-primary">Standings</span></span>
@@ -266,7 +257,7 @@ export function ArenaBattle({ challengeId, bossName, challengePrompt, prizePool 
               <BattleButton variant="ghost" size="sm" className="w-full text-[10px] font-black tracking-[0.2em]">VIEW FULL STANDINGS</BattleButton>
             </div>
           </CardContent>
-        </Card>
+        </Card>}
 
         {/* AI Judge Specs */}
         <Card className="glass border-secondary/30">

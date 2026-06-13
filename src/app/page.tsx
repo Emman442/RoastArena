@@ -80,7 +80,7 @@ export default function Home() {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4">
-            <Link href="#arenas" className="w-full sm:w-auto">
+            <Link href="/arena" className="w-full sm:w-auto">
               <BattleButton variant="primary" size="lg" className="w-full text-xl italic" glowing>
                 ENTER ARENA
               </BattleButton>

@@ -26,8 +26,12 @@ export interface Challenge {
     challenge_id: string
     founder: string
     prompt: string
+    founder_address: string
+    project_name: string
+    boss_avatar: string
     prize_pool: number
     deadline: number
+    difficulty: string
     status: string  // "active" | "judging" | "completed" | "cancelled"
     created_at: string
     participants: string[]

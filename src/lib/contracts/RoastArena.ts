@@ -4,7 +4,7 @@ import { studionet } from "genlayer-js/chains";
 
 import { TransactionStatus } from "genlayer-js/types"
 import { parseEther } from "viem";
-import { UserProfile } from "./types";
+import { Challenge, UserProfile } from "./types";
 
 
 /**
@@ -94,6 +94,48 @@ class RoastArena {
 
 
 
+    async fetchChallenges(): Promise<Challenge[]> {
+        try {
+            const challenges: any = await this.client.readContract({
+                address: this.contractAddress,
+                functionName: "fetch_all_challenges",
+            });
+
+
+            return challenges as Challenge[];
+
+        } catch (error) {
+            console.error("Error fetching challenges:", error);
+            throw new Error("Failed to fetch challenges");
+        }
+    }
+
+
+    async fetchChallengeById(challengeId: string): Promise<Challenge> {
+        try {
+            const challenge = await this.client.readContract({
+                address: this.contractAddress,
+                functionName: "get_challenge",
+                args: [challengeId],
+            });
+
+            console.log("Fetched challenge:", challenge);
+
+            if (!challenge) {
+                throw new Error("Challenge not found");
+            }
+
+            return challenge as Challenge;
+
+        } catch (error) {
+            console.error("Error fetching challenge:", error);
+            throw error;
+        }
+    }
+
+
+
+
     async createProfile(username: string) {
         await this.client.connect("studionet");
         try {
@@ -120,16 +162,19 @@ class RoastArena {
 
     async createChallenge(
         prompt: string,
+        founder_name: string,
+        project_name: string,
         prize_pool: number,
         duration_seconds: number,
         created_at: string
     ) {
+        
         await this.client.connect("studionet");
         try {
             const txHash = await this.client.writeContract({
                 address: this.contractAddress,
                 functionName: "create_challenge",
-                args: [prompt, prize_pool, duration_seconds, created_at],
+                args: [prompt, founder_name, project_name, prize_pool, duration_seconds, created_at],
                 value: parseEther(prize_pool.toString()),
             });
 
@@ -178,110 +223,49 @@ class RoastArena {
     }
 
 
-    async settleMutualBet(
-        bet_id: string
-    ) {
-        await this.client.connect("studionet");
 
+    async submitRoast(challenge_id: string, roast_content: string) {
+        await this.client.connect("studionet");
         try {
             const txHash = await this.client.writeContract({
                 address: this.contractAddress,
-                functionName: "settle_mutual_bet",
-                args: [bet_id],
+                functionName: "submit_roast",
+                args: [challenge_id, roast_content],
+                value: BigInt(0),
+            });
+            const receipt = await this.client.waitForTransactionReceipt({
+                hash: txHash,
+                status: TransactionStatus.ACCEPTED,
+            });
+            return receipt as TransactionReceipt;
+        } catch (error) {
+            console.error("Error submitting roast:", error);
+            throw new Error("Failed to submit roast");
+        }
+    }
+
+    async judgeChallenge(challenge_id: string) {
+        await this.client.connect("studionet");
+        try {
+            const txHash = await this.client.writeContract({
+                address: this.contractAddress,
+                functionName: "judge_challenge",
+                args: [challenge_id],
                 value: BigInt(0),
             });
 
-            const receipt =
-                await this.client.waitForTransactionReceipt({
-                    hash: txHash,
-                    status: TransactionStatus.ACCEPTED,
-                    retries: 24,
-                    interval: 5000,
-                });
-            console.log("Receopttt", receipt)
-            return receipt as TransactionReceipt;
-
-        } catch (error) {
-            console.error(
-                "Error settling mutual bet:",
-                error
-            );
-
-            throw new Error(
-                "Failed to settle mutual bet"
-            );
-        }
-    }
-
-    async joinConsensusBet(
-        bet_id: string,
-        side: string,
-        stake: number
-    ) {
-        await this.client.connect("studionet");
-
-        try {
-            const txHash = await this.client.writeContract({
-                address: this.contractAddress,
-                functionName: "join_consensus_bet",
-                args: [bet_id, side, stake],
-                value: parseEther(stake.toString()),
+            const receipt = await this.client.waitForTransactionReceipt({
+                hash: txHash,
+                status: TransactionStatus.ACCEPTED,
             });
 
-            const receipt =
-                await this.client.waitForTransactionReceipt({
-                    hash: txHash,
-                    status: TransactionStatus.ACCEPTED,
-                });
-            console.log("Receipt", receipt)
             return receipt as TransactionReceipt;
-
         } catch (error) {
-            console.error(
-                "Error joining consensus bet:",
-                error
-            );
-
-            throw new Error(
-                "Failed to join consensus bet"
-            );
+            console.error("Error judging challenge:", error);
+            throw new Error("Failed to judge challenge");
         }
     }
 
-
-    async acceptMutualChallenge(
-        bet_id: string,
-        creator_stake: number
-    ) {
-        await this.client.connect("studionet");
-
-        try {
-            const txHash = await this.client.writeContract({
-                address: this.contractAddress,
-                functionName: "accept_mutual_bet",
-                args: [bet_id],
-                value: parseEther(creator_stake.toString()),
-            });
-
-            const receipt =
-                await this.client.waitForTransactionReceipt({
-                    hash: txHash,
-                    status: TransactionStatus.ACCEPTED,
-                });
-            console.log("Receipt", receipt)
-            return receipt as TransactionReceipt;
-
-        } catch (error) {
-            console.error(
-                "Error accepting mutual bet:",
-                error
-            );
-
-            throw new Error(
-                "Failed to accept mutual bet"
-            );
-        }
-    }
 }
 
 

@@ -11,37 +11,52 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ChevronLeft, Rocket, Coins, Target, ShieldCheck, Loader2, Clock } from 'lucide-react';
 import Link from 'next/link';
+import { useCreateChallenge } from '@/hooks/RoastArena';
 
 export default function CreateChallengePage() {
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { isPending: isCreatingChallenge, mutate: CreateChallenge } = useCreateChallenge()
 
   const [formData, setFormData] = useState({
     bossName: '',
     projectName: '',
     prompt: '',
-    description: '',
     prizePool: '',
-    duration_seconds: 0,
+    duration_seconds: 86400,
+    createdAt: new Date().toISOString(),
   });
   console.log(formData)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    setIsSubmitting(true);
-
+    CreateChallenge({
+      prompt: formData.prompt,
+      founder_name: formData.bossName,
+      project_name: formData.projectName,
+      prize_pool: parseFloat(formData.prizePool),
+      duration_seconds: formData.duration_seconds,
+      created_at: formData.createdAt,
+    }, {
+      onSuccess: (data) => {
+        console.log("Challenge created successfully:", data);
+        router.push("/arenas");
+      },
+      onError: (error) => {
+        console.error("Error creating challenge:", error);
+      },
+    })
   };
 
 
   const DURATIONS = {
-  "1h": 3600,
-  "6h": 21600,
-  "12h": 43200,
-  "24h": 86400,
-  "3d": 259200,
-  "7d": 604800,
-};
+    "1h": 3600,
+    "6h": 21600,
+    "12h": 43200,
+    "24h": 86400,
+    "3d": 259200,
+    "7d": 604800,
+  };
 
   return (
     <div className="min-h-screen flex flex-col pt-24 pb-20 px-6">
@@ -104,16 +119,6 @@ export default function CreateChallengePage() {
               />
             </div>
 
-            {/* <div className="space-y-2">
-              <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Mission Briefing (Optional)</Label>
-              <Textarea
-                placeholder="Provide context, pain points, or specific things roasters should focus on..."
-                className="bg-black/40 border-white/10 min-h-[120px]"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              />
-            </div> */}
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1">
@@ -130,22 +135,33 @@ export default function CreateChallengePage() {
               </div>
 
 
-              <Select onValueChange={(value) => setFormData({ ...formData, duration_seconds: parseInt(value) })} defaultValue={formData.duration_seconds.toString()} className="bg-black/40 border-white/10">
+              <div className="space-y-2">
                 <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-blue-500" /> Challenge Duration
+                  <Clock className="w-3 h-3 text-blue-400" /> Challenge Duration
                 </Label>
-                <SelectContent>
-                  {Object.entries(DURATIONS).map(([label, value]) => (
-                    <SelectItem
-                      key={value}
-                      value={value.toString()}
-                      onSelect={() => setFormData({ ...formData, duration_seconds: value })}
-                    >
-                      {label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <Select
+                  value={formData.duration_seconds.toString()}
+                  defaultValue='84600'
+                  onValueChange={(value) =>
+                    setFormData({
+                      ...formData,
+                      duration_seconds: parseInt(value),
+                    })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select duration" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {Object.entries(DURATIONS).map(([label, value]) => (
+                      <SelectItem key={value} value={value.toString()}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
 
@@ -158,9 +174,9 @@ export default function CreateChallengePage() {
                 className="w-full italic group"
                 glowing
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isCreatingChallenge}
               >
-                {isSubmitting ? (
+                {isCreatingChallenge ? (
                   <Loader2 className="w-6 h-6 animate-spin" />
                 ) : (
                   <span className='flex gap-2 items-center'>DEPLOY CHALLENGE <Rocket className="w-8 h-8 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" /></span>

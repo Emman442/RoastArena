@@ -53,77 +53,38 @@ export function useUserProfile(wallet_address: string) {
     });
 }
 
-export function useFetchMutualBets() {
+export function useFetchChallenges() {
     const contract = useRoastArenaContract();
 
-    return useQuery<MutualBet[], Error>({
-        queryKey: ["mutual_bets"],
+    return useQuery<Challenge[], Error>({
+        queryKey: ["challenges"],
         queryFn: () => {
             if (!contract) {
                 throw new Error("Contract not initialized");
             }
-            return contract.getMutualBets();
+            return contract.fetchChallenges();
         },
     });
 }
 
-export function useFetchMutualBet(bet_id: string) {
+export function useFetchChallengeById(id: string | undefined) {
     const contract = useRoastArenaContract();
-
-    console.log("MUTUAL HOOK", {
-        bet_id,
-        contract,
-        enabled: !!bet_id && !!contract
-    });
 
     return useQuery({
-        queryKey: ["mutual_bet", bet_id],           // Good
+        queryKey: ["challenge", id],
         queryFn: async () => {
-            if (!contract) {
-                throw new Error("Contract not initialized yet");
-            }
-            console.log("RUNNING QUERY", bet_id);
+            if (!contract) throw new Error("Contract not initialized");
+            if (!id) throw new Error("Challenge ID is required");
 
-            try {
-                const bet = await contract.getMutualBet(bet_id);
-                console.log("FETCHED BET", bet);
-                return bet;
-            } catch (error) {
-                console.error("Failed to fetch mutual bet:", error);
-                throw error;
-            }
+            console.log(`🔍 Fetching challenge: ${id}`);
+            const data = await contract.fetchChallengeById(id);
+            console.log(`✅ Fetched challenge ${id}:`, data);
+            return data;
         },
-        enabled: !!bet_id && !!contract,            // ← VERY IMPORTANT
+        enabled: !!id && !!contract,
         retry: 2,
-        staleTime: 1000 * 30,                       // 30 seconds
-        gcTime: 1000 * 60 * 5,                      // 5 minutes
-    });
-}
-export function useFetchConsensusBet(bet_id: string) {
-    const contract = useRoastArenaContract();
-
-    return useQuery<ConsensusBet, Error>({
-        queryKey: ["consensus_bet", bet_id],
-        queryFn: () => {
-            if (!contract) {
-                throw new Error("Contract not initialized");
-            }
-            return contract.getConsensusBet(bet_id);
-        },
-    });
-}
-
-export function useFetchConsensusBets() {
-    const contract = useRoastArenaContract();
-
-    return useQuery<ConsensusBet[], Error>({
-        queryKey: ["consensus_bets"],
-        queryFn: () => {
-            if (!contract) {
-                throw new Error("Contract not initialized");
-            }
-            return contract.getConsensusBets();
-        },
+        staleTime: 1000 * 60,        // 1 minute
+        gcTime: 1000 * 60 * 5,       // 5 minutes
     });
 }
 
@@ -161,241 +122,118 @@ export function useCreateProfile() {
     });
 }
 
-export function useCreateMutualBet() {
+export function useCreateChallenge() {
     const contract = useRoastArenaContract();
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async ({
-            challenger,
-            description,
-            category,
-            creator_stake,
-            expiry_timestamp,
+            prompt,
+            founder_name,   
+            project_name,
+            prize_pool,
+            duration_seconds,
             created_at
         }: {
-            description: string;
-            category: string;
-            creator_stake: number;
-            expiry_timestamp: number;
-            created_at: string;
-            challenger: string;
-        }) => {
-            if (!contract) {
-                throw new Error("Contract not initialized");
-            }
-
-            const receipt = await contract.createMutualBet(challenger, description, category, creator_stake, expiry_timestamp, created_at);
-            console.log("Mutual bet creation transaction receipt:", receipt);
-            return receipt;
-        },
-
-        onSuccess: async (_, variables) => {
-            await queryClient.invalidateQueries({
-                queryKey: ["mutual_bet_created"],
-            });
-
-            await queryClient.invalidateQueries({
-                queryKey: ["mutual_bet"],
-            });
-        },
-        onError: async (error) => {
-            console.error("Error creating mutual bet:", error);
-            toast.error("Failed to create mutual bet. Please try again.");
-        }
-    });
-}
-
-
-export function useCreateConsensusBet() {
-    const contract = useRoastArenaContract();
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: async ({
-            description,
-            category,
-            creator_side,
-            creator_stake,
-            min_stake,
-            expiry_timestamp,
-            created_at
-        }: {
-            description: string;
-            category: string;
-            creator_side: string;
-            creator_stake: number;
-            min_stake: number;
-            expiry_timestamp: number;
+            prompt: string;
+            founder_name: string;
+            project_name: string;
+            prize_pool: number;
+            duration_seconds: number;
             created_at: string;
         }) => {
             if (!contract) {
                 throw new Error("Contract not initialized");
             }
 
-            const receipt = await contract.createConsensusBet(description, category, creator_side, creator_stake, min_stake, expiry_timestamp, created_at);
-            console.log("Consensus bet creation transaction receipt:", receipt);
+            console.log("Creating challenge with params:", {
+            prompt,
+            founder_name,
+            project_name,
+            prize_pool,
+            duration_seconds,
+            created_at
+        });
+
+            const receipt = await contract.createChallenge(prompt, founder_name, project_name, prize_pool, duration_seconds, created_at);
+            console.log("Challenge creation transaction receipt:", receipt);
             return receipt;
         },
 
-
         onSuccess: async (_, variables) => {
             await queryClient.invalidateQueries({
-                queryKey: ["consensus_bet_created"],
-            });
-
-            await queryClient.invalidateQueries({
-                queryKey: ["consensus_bets"],
+                queryKey: ["challenges"],
             });
         },
         onError: async (error) => {
-            console.error("Error creating consensus bet:", error);
-            toast.error("Failed to create consensus bet. Please try again.");
+            console.error("Error creating challenge:", error);
+            toast.error("Failed to create challenge. Please try again.");
         }
     });
 }
 
-export function useSettleConsensusBet(bet_id: string) {
+
+export function useSubmitRoast() {
     const contract = useRoastArenaContract();
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async ({
-            bet_id
+            challenge_id,
+            roast_content,
         }: {
-            bet_id: string;
+            challenge_id: string;
+            roast_content: string;
         }) => {
             if (!contract) {
                 throw new Error("Contract not initialized");
             }
 
-            const receipt = await contract.settleConsensusBet(bet_id);
-            console.log("Consensus bet settlement transaction receipt:", receipt);
+            const receipt = await contract.submitRoast(challenge_id, roast_content);
+            console.log("Roast submission transaction receipt:", receipt);
             return receipt;
         },
-
-
         onSuccess: async (_, variables) => {
+            await queryClient.invalidateQueries({
+                queryKey: ["challenge", variables.challenge_id],
+            });
+        },
+        onError: async (error) => {
+            console.error("Error submitting roast:", error);
+            toast.error("Failed to submit roast. Please try again.");
+        }
+
+    });
+}
+
+
+
+export function useJudgeChallenge() {
+    const contract = useRoastArenaContract();
+    const queryClient = useQueryClient();
     
-            await queryClient.invalidateQueries({
-                queryKey: ["consensus_bet"],
-            });
-        },
-        onError: async (error) => {
-            console.error("Error settling consensus bet:", error);
-            toast.error("Failed to settle consensus bet. Please try again.");
-        }
-    });
-}
-
-export function useJoinConsensusBet() {
-    const contract = useRoastArenaContract();
-    const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: async ({
-            bet_id,
-            side,
-            stake
+            challenge_id,
         }: {
-            bet_id: string;
-            side: string;
-            stake: number;
+            challenge_id: string;
         }) => {
             if (!contract) {
                 throw new Error("Contract not initialized");
             }
-
-            const receipt = await contract.joinConsensusBet(bet_id, side, stake);
-            console.log("join consensus bet transaction receipt:", receipt);
+            
+            const receipt = await contract.judgeChallenge(challenge_id);
+            console.log("Challenge judging transaction receipt:", receipt);
             return receipt;
-        },
-
-
+        }, 
         onSuccess: async (_, variables) => {
             await queryClient.invalidateQueries({
-                queryKey: ["joined_consensus_bet"],
-            });
-
-            await queryClient.invalidateQueries({
-                queryKey: ["consensus_bets"],
+                queryKey: ["challenge", variables.challenge_id],
             });
         },
         onError: async (error) => {
-            console.error("Error joining Consensus bet:", error);
-            toast.error("Failed to join consensus bet. Please try again.");
-        }
-    });
-}
-
-
-export function useSettleMutualBet(bet_id: string) {
-    const contract = useRoastArenaContract();
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: async ({
-            bet_id
-        }: {
-            bet_id: string;
-        }) => {
-            if (!contract) {
-                throw new Error("Contract not initialized");
-            }
-
-            const receipt = await contract.settleMutualBet(bet_id);
-            console.log("Mutual bet settlement transaction receipt:", receipt);
-            return receipt;
-        },
-
-
-        onSuccess: async (_, variables) => {
-            await queryClient.invalidateQueries({
-                queryKey: ["mutual_bet"],
-            });
-        },
-        onError: async (error) => {
-            console.error("Error settling mutual bet:", error);
-            toast.error("Failed to settle mutual bet. Please try again.");
-        }
-    });
-}
-
-
-export function useAcceptMutualBet(bet_id: string) {
-    const contract = useRoastArenaContract();
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: async ({
-            bet_id,
-            creator_stake
-        }: {
-            bet_id: string;
-            creator_stake: number
-        }) => {
-            if (!contract) {
-                throw new Error("Contract not initialized");
-            }
-
-            const receipt = await contract.acceptMutualChallenge(bet_id, creator_stake);
-            console.log("Acceot Mutual Transaction Receipt:", receipt);
-            return receipt;
-        },
-
-
-        onSuccess: async (_, variables) => {
-            await queryClient.invalidateQueries({
-                queryKey: ["accepted_mutual_bet"],  
-            });
-
-            await queryClient.invalidateQueries({
-                queryKey: ["mutual_bet"],
-            });
-        },
-        onError: async (error) => {
-            console.error("Error accepting mutual bets:", error);
-            toast.error("Failed to accept mutual bet. Please try again.");
+            console.error("Error judging challenge:", error);
+            toast.error("Failed to judge challenge. Please try again.");
         }
     });
 }
