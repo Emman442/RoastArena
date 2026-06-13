@@ -134,7 +134,7 @@ export default function ArenaDetailPage({ }) {
               <div className="space-y-2">
                 <div className="flex flex-wrap items-center gap-3">
                   <span className="px-3 py-1 bg-battle-red text-white text-[10px] font-black uppercase tracking-widest rounded-sm">{challenge?.difficulty ? challenge?.difficulty : "Savage"} BATTLE</span>
-                  <span className="px-3 py-1 glass border-secondary/50 text-secondary text-[10px] font-black uppercase tracking-widest rounded-sm">USDC REWARDS</span>
+                  <span className="px-3 py-1 glass border-secondary/50 text-secondary text-[10px] font-black uppercase tracking-widest rounded-sm">GEN REWARDS</span>
                 </div>
                 <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter italic leading-none">{challenge?.prompt}</h1>
               </div>
@@ -156,7 +156,7 @@ export default function ArenaDetailPage({ }) {
                   <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest flex items-center gap-1">
                     <Trophy className="w-3 h-3 text-gold" /> Total Pool
                   </span>
-                  <div className="text-2xl font-black text-gold leading-none">{challenge?.prize_pool} USDC</div>
+                  <div className="text-2xl font-black text-gold leading-none">{challenge?.prize_pool} GEN</div>
                 </div>
                 <div className="space-y-1">
                   <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest flex items-center gap-1">

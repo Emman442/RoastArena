@@ -95,7 +95,7 @@ export default function LeaderboardPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4 text-right">
-                          <span className="text-xl font-black text-gold tracking-tighter italic">{roaster.earnings} USDC</span>
+                          <span className="text-xl font-black text-gold tracking-tighter italic">{roaster.earnings} GEN</span>
                         </td>
                       </tr>
                     ))}

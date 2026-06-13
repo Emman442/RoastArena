@@ -192,7 +192,7 @@ export function ArenaBattle({ challengeId, bossName, challengePrompt, prizePool,
                   </div>
                   <div>
                     <span className="text-[10px] font-black uppercase text-muted-foreground">Estimated Reward</span>
-                    <span className="text-lg font-black block text-gold tracking-tight">240.50 USDC</span>
+                    <span className="text-lg font-black block text-gold tracking-tight">240.50 GEN</span>
                   </div>
                 </div>
                 <BattleButton variant="outline" size="sm" className="border-primary/50 text-primary">SHARE BATTLE</BattleButton>
@@ -210,7 +210,7 @@ export function ArenaBattle({ challengeId, bossName, challengePrompt, prizePool,
             <span className="text-[10px] font-black uppercase text-muted-foreground flex items-center gap-1">
               <Trophy className="w-3 h-3 text-gold" /> Prize Pool
             </span>
-            <div className="text-2xl font-black text-gold">{prizePool} <span className="text-xs">USDC</span></div>
+            <div className="text-2xl font-black text-gold">{prizePool} <span className="text-xs">GEN</span></div>
           </div>
           <div className="glass p-6 rounded-xl border-white/5 space-y-1">
             <span className="text-[10px] font-black uppercase text-muted-foreground flex items-center gap-1">
@@ -248,7 +248,7 @@ export function ArenaBattle({ challengeId, bossName, challengePrompt, prizePool,
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs font-black text-gold block">{entry.prize} USDC</span>
+                    <span className="text-xs font-black text-gold block">{entry.prize} GEN</span>
                   </div>
                 </div>
               ))}

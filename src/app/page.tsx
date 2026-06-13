@@ -12,7 +12,7 @@ export default function Home() {
     { label: "Total Prize Pools", value: "$124,500", icon: Trophy, color: "text-gold" },
     { label: "Active Challenges", value: "42", icon: Target, color: "text-primary" },
     { label: "Roasts Submitted", value: "8,921", icon: Zap, color: "text-battle-orange" },
-    { label: "USDC Paid Out", value: "$98,200", icon: Coins, color: "text-secondary" },
+    { label: "GEN Paid Out", value: "$98,200", icon: Coins, color: "text-secondary" },
   ]
 
   const arenas = [
@@ -76,7 +76,7 @@ export default function Home() {
           
           <p className="max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground font-medium">
             Founders fund challenges. Creators submit roasts. <br className="hidden md:block" />
-            AI judges the winners. Earn USDC for making the internet laugh.
+            AI judges the winners. Earn GEN for making the internet laugh.
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4">

@@ -78,7 +78,7 @@ export function ArenaCard({
             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
               <Trophy className="w-3 h-3 text-gold" /> Prize Pool
             </span>
-            <span className="text-xl font-black text-gold">{prize_pool} <span className="text-xs font-normal opacity-70">USDC</span></span>
+            <span className="text-xl font-black text-gold">{prize_pool} <span className="text-xs font-normal opacity-70">GEN</span></span>
           </div>
           <div className="flex flex-col items-end">
             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1">

@@ -122,7 +122,7 @@ export default function CreateChallengePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1">
-                  <Coins className="w-3 h-3 text-gold" /> Prize Pool (USDC)
+                  <Coins className="w-3 h-3 text-gold" /> Prize Pool (GEN)
                 </Label>
                 <Input
                   type="number"
