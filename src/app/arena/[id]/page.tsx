@@ -195,6 +195,7 @@ export default function ArenaDetailPage({ }) {
           status={challenge?.status}
           founderAddress={challenge?.founder_address}
           deadline={challenge?.deadline.toString() || ""}
+          scores={challenge?.scores || []}
         />}
     </div>
   )

@@ -76,7 +76,7 @@ export default function Home() {
           
           <p className="max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground font-medium">
             Founders fund challenges. Creators submit roasts. <br className="hidden md:block" />
-            AI judges the winners. Earn GEN for making the internet laugh.
+            AI judges the winners. Earn $GEN for making the internet laugh.
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4">

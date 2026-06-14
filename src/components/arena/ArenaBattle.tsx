@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Trophy, Flame, Zap, Sword, Shield, Cpu, Loader2, Coins } from "lucide-react"
 import { useSubmitRoast } from "@/hooks/RoastArena"
 import toast from "@/lib/utils/toast"
+import { formatAddress } from "@/lib/genlayer/wallet"
 
 interface ArenaBattleProps {
   challengeId: string
@@ -18,9 +19,14 @@ interface ArenaBattleProps {
   status: string
   founderAddress: string
   deadline: string
+  scores: Array<{
+    creator: string,
+    rank: number,
+    overall: number,
+  }>
 }
 
-export function ArenaBattle({ challengeId, bossName, challengePrompt, prizePool, status, founderAddress, deadline }: ArenaBattleProps) {
+export function ArenaBattle({ challengeId, scores, bossName, challengePrompt, prizePool, status, founderAddress, deadline }: ArenaBattleProps) {
   console.log(status)
   const [roastText, setRoastText] = useState("")
   const [isEvaluating, setIsEvaluating] = useState(false)
@@ -231,25 +237,16 @@ export function ArenaBattle({ challengeId, bossName, challengePrompt, prizePool,
           </CardHeader>
           <CardContent className="p-0">
             <div className="divide-y divide-white/5">
-              {[
-                { rank: 1, name: "CryptoRoaster", score: 96.8, prize: "450.00" },
-                { rank: 2, name: "MemeKing_AI", score: 95.4, prize: "320.00" },
-                { rank: 3, name: "SavageBuilder", score: 93.7, prize: "210.00" },
-                { rank: 4, name: "TheAlphaWitch", score: 91.2, prize: "150.00" },
-                { rank: 5, name: "DegenerateDev", score: 89.5, prize: "100.00" },
-              ].map((entry) => (
-                <div key={entry.rank} className={`flex items-center justify-between p-4 hover:bg-white/5 transition-colors group cursor-default ${entry.rank === 1 ? 'bg-gold/5 border-l-2 border-gold' : ''}`}>
+              {scores.map((entry) => (
+                <div key={entry?.rank} className={`flex items-center justify-between p-4 hover:bg-white/5 transition-colors group cursor-default ${entry.rank === 1 ? 'bg-gold/5 border-l-2 border-gold' : ''}`}>
                   <div className="flex items-center gap-4">
                     <span className={`text-xl font-black italic w-6 ${entry.rank === 1 ? 'text-gold' : entry.rank === 2 ? 'text-slate-300' : entry.rank === 3 ? 'text-amber-600' : 'text-muted-foreground'}`}>
                       {entry.rank}
                     </span>
                     <div className="flex flex-col">
-                      <span className="text-sm font-black tracking-tight">{entry.name}</span>
-                      <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">{entry.score} SCORE</span>
+                      <span className="text-sm font-black tracking-tight">{formatAddress(entry.creator)}</span>
+                      <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">{entry.overall} SCORE</span>
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-xs font-black text-gold block">{entry.prize} GEN</span>
                   </div>
                 </div>
               ))}
