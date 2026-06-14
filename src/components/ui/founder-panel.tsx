@@ -6,6 +6,7 @@ import { useJudgeChallenge } from '@/hooks/RoastArena'
 import toast from '@/lib/utils/toast'
 
 export default function FounderPanel({ challenge, isFounder, hasEnded }: { challenge: Challenge, isFounder: boolean, hasEnded: boolean }) {
+    console.log(challenge)
     const { isPending: isJudgingChallenge, mutate: JudgeChallenge } = useJudgeChallenge()
     const handleJudgeRoasts = () => {
 
@@ -59,7 +60,7 @@ export default function FounderPanel({ challenge, isFounder, hasEnded }: { chall
 
                 <BattleButton
                     onClick={handleJudgeRoasts}
-                    disabled={!hasEnded || challenge.status !== "active"}
+                    disabled={!hasEnded || challenge.status !== "active" || isJudgingChallenge}
                     className='mx-auto block my-4'
 
                 >

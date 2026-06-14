@@ -168,7 +168,7 @@ class RoastArena {
         duration_seconds: number,
         created_at: string
     ) {
-        
+
         await this.client.connect("studionet");
         try {
             const txHash = await this.client.writeContract({
@@ -258,13 +258,14 @@ class RoastArena {
                 hash: txHash,
                 status: TransactionStatus.ACCEPTED,
             });
-
             return receipt as TransactionReceipt;
+
         } catch (error) {
             console.error("Error judging challenge:", error);
             throw new Error("Failed to judge challenge");
         }
     }
+
 
 }
 

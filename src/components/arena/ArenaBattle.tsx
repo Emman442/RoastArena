@@ -28,7 +28,8 @@ export function ArenaBattle({ challengeId, bossName, challengePrompt, prizePool,
   const [evalStep, setEvalStep] = useState(0)
 
   const { mutate: submitRoast, isPending: isSubmitting } = useSubmitRoast()
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
     try {
       submitRoast({ challenge_id: challengeId, roast_content: roastText }, {
         onSuccess: () => {

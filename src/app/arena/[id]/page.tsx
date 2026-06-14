@@ -43,8 +43,7 @@ export default function ArenaDetailPage({ }) {
   const isFounder =
     currentAddress === challenge?.founder_address?.toLowerCase();
 
-  const hasEnded =
-    Date.now() >= new Date(challenge?.deadline.toString()|| "0").getTime();
+
 
 
   if (isFetching) {
@@ -90,6 +89,9 @@ export default function ArenaDetailPage({ }) {
     );
   }
 
+    const hasEnded =
+  Date.now() >= challenge?.deadline;
+  console.log("hasEnded:", hasEnded)
 
   return (
     <div className="min-h-screen flex flex-col pt-24">

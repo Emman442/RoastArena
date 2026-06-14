@@ -236,4 +236,30 @@ export function useJudgeChallenge() {
             toast.error("Failed to judge challenge. Please try again.");
         }
     });
+
 }
+
+
+// export function useJudgeChallenge() {
+//     const contract = useRoastArenaContract();
+//     const queryClient = useQueryClient();
+
+//     return useMutation({
+//         mutationFn: async ({ challenge_id }: { challenge_id: string }) => {
+//             if (!contract) throw new Error("Contract not initialized");
+
+//             // Fire and forget
+//             const txHash = await contract.judgeChallenge(challenge_id);
+
+//             // Poll until completed
+//             await contract.pollUntilJudged(challenge_id);
+
+//             return txHash;
+//         },
+//         onSuccess: (_, variables) => {
+//             queryClient.invalidateQueries({ queryKey: ["challenge", variables.challenge_id] });
+//             queryClient.invalidateQueries({ queryKey: ["challenges"] });
+//         }
+//     });
+
+
