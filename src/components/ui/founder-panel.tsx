@@ -43,7 +43,7 @@ export default function FounderPanel({ challenge, isFounder, hasEnded }: { chall
         <>
             {
                 challenge?.status === "completed" ?
-                    <div className="space-y-8">
+                    <div className="space-y-8 w-[80%] mx-auto">
 
                         {/* TOP 3 PODIUM */}
 
