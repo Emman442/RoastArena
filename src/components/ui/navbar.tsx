@@ -43,14 +43,11 @@ export default function Navbar() {
     setHasChecked(true);
 
     if (profileExists) {
-      toast.success("Welcome back!", {
-        description: `${address.slice(0, 6)}...${address.slice(-4)}`,
-      });
+     
     } else {
       setShowSetupModal(true);
     }
   }, [address, isLoading, profileExists, hasChecked]);
-
 
     return (
         <>
@@ -90,8 +87,7 @@ export default function Navbar() {
                     <span className="font-headline font-black text-2xl tracking-tighter uppercase italic">Roast<span className="text-primary">Arena</span></span>
                 </Link>
                 <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-widest text-muted-foreground">
-                    <Link href="#arenas" className="hover:text-primary transition-colors">Arenas</Link>
-                    <Link href="/leaderboard" className="hover:text-primary transition-colors">Leaderboard</Link>
+                    <Link href="/arena" className="hover:text-primary transition-colors">Arenas</Link>
                     <Link href="/hall-of-fame" className="hover:text-primary transition-colors">Hall of Fame</Link>
                 </div>
                 <div className="flex items-center gap-4">

@@ -7,7 +7,7 @@ import { Timer, Users, Trophy, Cpu } from "lucide-react"
 import Link from "next/link"
 import { getTimeLeft } from "@/lib/utils/getTimeLeft"
 import { useEffect, useState } from "react"
-
+import Avatar from "boring-avatars"
 interface ArenaCardProps {
   challenge_id: string
   founder: string
@@ -58,8 +58,13 @@ export function ArenaCard({
       </div>
 
       <CardHeader className="flex flex-row items-center gap-4 pt-6">
-        <div className="relative w-14 h-14 rounded-full border-2 border-primary/50 overflow-hidden shrink-0">
-          <Image src={bossAvatar} alt={founder} fill className="object-cover" />
+        <div className="relative w-12 h-12 rounded-full border-2 border-primary/50 overflow-hidden shrink-0">
+
+          <Avatar
+            size={50}
+            name={founder}
+            variant="beam"
+          />
         </div>
         <div className="flex flex-col">
           <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Arena Boss</span>

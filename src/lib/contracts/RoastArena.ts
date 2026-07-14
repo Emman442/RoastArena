@@ -192,38 +192,6 @@ class RoastArena {
 
 
 
-
-
-
-
-    async settleConsensusBet(
-        bet_id: string,
-    ) {
-        await this.client.connect("studionet");
-        try {
-            const txHash = await this.client.writeContract({
-                address: this.contractAddress,
-                functionName: "settle_consensus_bet",
-                args: [bet_id],
-                value: BigInt(0),
-            });
-
-            const receipt = await this.client.waitForTransactionReceipt({
-                hash: txHash,
-                status: TransactionStatus.ACCEPTED,
-                retries: 60,
-                interval: 5000,
-            });
-            console.log("Receopttt", receipt)
-            return receipt as TransactionReceipt;
-        } catch (error) {
-            console.error("Error creating consensus bet:", error);
-            throw new Error("Failed to create consensus bet");
-        }
-    }
-
-
-
     async submitRoast(challenge_id: string, roast_content: string) {
         await this.client.connect("studionet");
         try {
@@ -257,6 +225,8 @@ class RoastArena {
             const receipt = await this.client.waitForTransactionReceipt({
                 hash: txHash,
                 status: TransactionStatus.ACCEPTED,
+                retries: 60,
+                interval: 5000,
             });
             return receipt as TransactionReceipt;
 

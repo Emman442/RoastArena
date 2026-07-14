@@ -1,3 +1,4 @@
+"use client"
 
 import Image from "next/image"
 import Link from "next/link"
@@ -6,54 +7,33 @@ import { ArenaCard } from "@/components/arena/ArenaCard"
 import { Trophy, Target, Users, Zap, Coins } from "lucide-react"
 import { useWallets } from "@privy-io/react-auth"
 import Navbar from "@/components/ui/navbar"
+import { useFetchChallenges } from "@/hooks/RoastArena"
 
 export default function Home() {
+
+  const {data: arenas} = useFetchChallenges();
+  const totalPrizeSpent =
+  arenas?.reduce((sum, arena) => sum + Number(arena.prize_pool), 0) ?? 0;
+
+const totalCompletedPrizeSpent =
+  arenas
+    ?.filter((arena) => arena.status === "completed")
+    .reduce((sum, arena) => sum + Number(arena.prize_pool), 0) ?? 0;
+
+
+const totalRoasts =
+  arenas
+    ?.reduce((sum, arena) => sum + Number(arena.participants.length), 0) ?? 0;
+
+
   const stats = [
-    { label: "Total Prize Pools", value: "$124,500", icon: Trophy, color: "text-gold" },
-    { label: "Active Challenges", value: "42", icon: Target, color: "text-primary" },
-    { label: "Roasts Submitted", value: "8,921", icon: Zap, color: "text-battle-orange" },
-    { label: "GEN Paid Out", value: "$98,200", icon: Coins, color: "text-secondary" },
+    { label: "Total Prize Pools", value: `${totalPrizeSpent} GEN`, icon: Trophy, color: "text-gold" },
+    { label: "Active Challenges", value: arenas?.length, icon: Target, color: "text-primary" },
+    { label: "Roasts Submitted", value: totalRoasts, icon: Zap, color: "text-battle-orange" },
+    { label: "$GEN Paid Out", value: `${totalCompletedPrizeSpent} GEN`, icon: Coins, color: "text-secondary" },
   ]
 
-  const arenas = [
-    {
-      id: "1",
-      bossName: "Nischal Shetty",
-      bossAvatar: "https://picsum.photos/seed/boss1/400/400",
-      projectName: "WazirX / Shardeum",
-      projectLogo: "https://picsum.photos/seed/proj1/200/200",
-      prompt: "Roast founders who think 'we are still early' is a valid excuse for a broken UI.",
-      prizePool: "1,500",
-      timeLeft: "14:22:05",
-      participants: 124,
-      difficulty: "Savage" as const
-    },
-    {
-      id: "2",
-      bossName: "Sandeep Nailwal",
-      bossAvatar: "https://picsum.photos/seed/boss2/400/400",
-      projectName: "Polygon",
-      projectLogo: "https://picsum.photos/seed/proj2/200/200",
-      prompt: "Roast developers who copy-paste entire smart contracts from StackOverflow without reading.",
-      prizePool: "2,000",
-      timeLeft: "08:45:12",
-      participants: 256,
-      difficulty: "Elite" as const
-    },
-    {
-      id: "3",
-      bossName: "The AI Overlord",
-      bossAvatar: "https://picsum.photos/seed/boss3/400/400",
-      projectName: "RoastArena Core",
-      projectLogo: "https://picsum.photos/seed/proj3/200/200",
-      prompt: "Roast users who think an AI judge can't detect a low-effort ChatGPT roast.",
-      prizePool: "500",
-      timeLeft: "48:00:00",
-      participants: 12,
-      difficulty: "Beginner" as const
-    }
-  ]
-
+  
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
@@ -66,7 +46,7 @@ export default function Home() {
         
         <div className="relative z-20 max-w-5xl mx-auto text-center space-y-8">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border-primary/30 text-primary text-xs font-black tracking-widest uppercase animate-float">
-            <Zap className="w-4 h-4 fill-primary" /> Season 1: Genesis Battle
+            <Zap className="w-4 h-4 fill-primary" /> Genesis Battle
           </div>
           
           <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter italic leading-[0.9]">
@@ -120,8 +100,8 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {arenas.map((arena) => (
-            <ArenaCard key={arena.id} {...arena} />
+          {arenas?.reverse().map((arena) => (
+            <ArenaCard key={arena.challenge_id} {...arena} />
           ))}
         </div>
 

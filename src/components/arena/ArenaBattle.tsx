@@ -68,15 +68,7 @@ export function ArenaBattle({ challengeId, scores, bossName, challengePrompt, pr
   ]
 
 
-  const evaluation = {
-    humor: 85,
-    creativity: 78,
-    originality: 92,
-    savagery: 88,
-    relevance: 80,
-    viralityPotential: 90,
 
-  }
 
 
   const ScoreBar = ({ label, score, color }: { label: string; score: number; color: string }) => (
@@ -157,56 +149,7 @@ export function ArenaBattle({ challengeId, scores, bossName, challengePrompt, pr
               </BattleButton>
             </div>
           </CardContent>
-        </Card>
-
-        {/* AI Result Dashboard */}
-        {status === "completed" && (
-          <Card className="glass border-gold/30 gold-glow animate-in zoom-in duration-500">
-            <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
-                <h3 className="font-black uppercase tracking-tighter text-3xl italic text-gold flex items-center gap-2">
-                  <Trophy className="w-8 h-8" /> Final <span className="text-white">Judgment</span>
-                </h3>
-                <div className="text-right">
-                  <span className="text-[10px] font-black uppercase text-muted-foreground block tracking-[0.2em]">Overall Rank</span>
-                  <span className="text-4xl font-black italic text-gold">#{Math.floor(Math.random() * 5) + 1}</span>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-8">
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                <ScoreBar label="Humor" score={evaluation.humor} color="bg-primary" />
-                <ScoreBar label="Creativity" score={evaluation.creativity} color="bg-secondary" />
-                <ScoreBar label="Originality" score={evaluation.originality} color="bg-green-500" />
-                <ScoreBar label="Savagery" score={evaluation.savagery} color="bg-battle-red" />
-                <ScoreBar label="Relevance" score={evaluation.relevance} color="bg-blue-500" />
-                <ScoreBar label="Viral Factor" score={evaluation.viralityPotential} color="bg-battle-orange" />
-              </div>
-
-              <div className="bg-white/5 p-6 rounded-xl border border-white/10 space-y-3">
-                <div className="flex items-center gap-2 text-gold text-xs font-black uppercase tracking-[0.2em]">
-                  <Cpu className="w-4 h-4" /> Judge Reasoning
-                </div>
-                {/* <p className="text-sm font-medium leading-relaxed italic opacity-90">
-                  "{evaluation.reasoning}"
-                </p> */}
-              </div>
-
-              <div className="flex items-center justify-between p-4 bg-primary/10 rounded-lg border border-primary/20">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center border border-gold/30">
-                    <Coins className="w-6 h-6 text-gold" />
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-black uppercase text-muted-foreground">Estimated Reward</span>
-                    <span className="text-lg font-black block text-gold tracking-tight">240.50 GEN</span>
-                  </div>
-                </div>
-                <BattleButton variant="outline" size="sm" className="border-primary/50 text-primary">SHARE BATTLE</BattleButton>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        </Card>   
       </div>
 
       {/* Right: Leaderboard & Info */}
@@ -260,9 +203,7 @@ export function ArenaBattle({ challengeId, scores, bossName, challengePrompt, pr
         {/* AI Judge Specs */}
         <Card className="glass border-secondary/30">
           <CardHeader className="pb-2">
-            <h3 className="font-black uppercase tracking-tighter text-sm italic text-secondary flex items-center gap-2">
-              <Shield className="w-4 h-4" /> AI Judge Logic v2.5
-            </h3>
+          
           </CardHeader>
           <CardContent className="space-y-3">
             <p className="text-[11px] text-muted-foreground font-medium leading-relaxed">

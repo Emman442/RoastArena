@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { ChevronLeft, Rocket, Coins, Target, ShieldCheck, Loader2, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { useCreateChallenge } from '@/hooks/RoastArena';
+import toast from '@/lib/utils/toast';
 
 export default function CreateChallengePage() {
   const router = useRouter();
@@ -39,11 +40,13 @@ export default function CreateChallengePage() {
       created_at: formData.createdAt,
     }, {
       onSuccess: (data) => {
-        console.log("Challenge created successfully:", data);
-        router.push("/arenas");
+        toast.success("Challenge Created successfully!")
+        router.push("/arena");
+
       },
       onError: (error) => {
         console.error("Error creating challenge:", error);
+        toast.error("failed to create challenge, Please try again")
       },
     })
   };
