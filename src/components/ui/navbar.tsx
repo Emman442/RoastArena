@@ -18,7 +18,6 @@ export default function Navbar() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const { wallets, ready } = useWallets();
-    const { logout } = usePrivy();
     const [hasChecked, setHasChecked] = useState(false);
     const [showSetupModal, setShowSetupModal] = useState(false);
     const embeddedWallet = wallets[0];
@@ -97,12 +96,6 @@ export default function Navbar() {
                                 <Button variant="outline" className="hidden lg:flex gap-2">
                                     <Wallet className="w-4 h-4" />
                                     {address.slice(0, 6)}...{address.slice(-4)}
-                                </Button>
-                                <Button variant="outline" className="hidden lg:flex gap-2" onClick={() => {
-                                    console.log("LOGOUT CLICKED");
-            
-                                }}>
-                                    logout
                                 </Button>
                             </>
                         ) : (
