@@ -218,20 +218,6 @@ npm run dev
 
 Deploy the RoastArena Intelligent Contract through GenLayer Studio.
 
----
-
-## Future Roadmap
-
-* AI-generated roast feedback
-* Creator reputation system
-* Hall of Fame leaderboard
-* Sponsored founder challenges
-* Multi-category creative competitions
-* Cross-chain prize pools
-* Stablecoin rewards
-
----
-
 
 ---
 
